@@ -1,40 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Widget de IA Integrado
 
-## Getting Started
+Projeto de widget de IA personalizável com integração Firebase (banco principal) e MySQL (backup), utilizando Cohere AI para geração de respostas.
 
-First, run the development server:
+## Visão Geral
 
-```bash
+Sistema que permite:
+- Cadastro de usuários admin e clientes
+- Personalização do comportamento da IA
+- Geração de widget para implementação em sites
+
+
+##  Tecnologias Utilizadas
+
+- **Frontend**: Next.js (Pages Router)
+- **Backend**: API Routes (Next.js)
+- **Banco Principal**: Firebase Firestore
+- **Banco Secundário**: MySQL
+- **IA**: Cohere AI
+- **Autenticação**: Firebase Auth
+- **Widget**: JavaScript vanilla embedável
+
+##  Estrutura do Projeto
+/src
+├── /pages
+│ ├── /api
+│ │ ├── /auth - Endpoints de autenticação
+│ │ ├── /ia - Endpoints de configuração da IA
+│ │ └── /widget - Endpoints do widget
+├── /lib
+│ ├── /db - Conexões com bancos de dados
+│ ├── /services - Lógica de negócios
+│ └── /utils - Utilitários
+/public
+│ └── /widget - Arquivos estáticos do widget
+
+
+
+## 🔧 Configuração do Ambiente
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/Mariquinha327/Testar_Api.git
+   cd seu-projeto
+Instale as dependências:
+
+npm install
+Configure as variáveis de ambiente (.env.local):
+
+env
+# Firebase
+FIREBASE_API_KEY=xxx
+FIREBASE_AUTH_DOMAIN=xxx.firebaseapp.com
+FIREBASE_PROJECT_ID=xxx
+FIREBASE_STORAGE_BUCKET=xxx.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=xxx
+FIREBASE_APP_ID=xxx
+
+# MySQL
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=xxx
+MYSQL_DATABASE=ai_widget
+
+# Cohere AI
+COHERE_API_KEY=xxx
+
+
+# Inicie o servidor de desenvolvimento:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+# Endpoints da API
+Autenticação
+POST /api/auth/register - Registra novo usuário
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+json
+{
+  "email": "user@example.com",
+  "password": "senhasegura",
+  "role": "client"
+}
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Configuração da IA
+PUT /api/ia/customize - Personaliza o comportamento da IA
 
-## Learn More
+json
+{
+  "userId": "1748971955502",
+  "personality": "amigável",
+  "greeting_message": "Olá! Como posso ajudar?",
+  "color_scheme": "#4f46e5"
+}
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Widget
+GET /api/widget/generate?userId=1748971955502 - Gera código de embed
 
-## Deploy on Vercel
+json
+{
+  "widgetUrl": "http://localhost:3000/widget/script.js?userId=1748971955502,
+  "embedCode": "<script src='...' defer></script>"
+}
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+# Implementação do Widget
+Para implementar o widget em qualquer site:
+
+
+<script src="URL_DO_SEU_WIDGET" defer></script>
+O widget aparecerá no canto inferior direito da página.
+
+# Testando a API
+Use o Postman para testar os endpoints
+
+Importe a coleção do Postman
+
+Execute os fluxos:
+
+Registrar usuário
+
+Personalizar IA
+
+Gerar widget
+
+Testar widget
