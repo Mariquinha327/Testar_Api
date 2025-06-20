@@ -8,26 +8,20 @@ const pool = createPool({
   user: process.env.MYSQL_USER || 'root',
   password: process.env.MYSQL_PASSWORD || '',
   database: process.env.MYSQL_DATABASE || 'ai_widget_db',
-   port: process.env.MYSQL_PORT || 3306,
+  port: process.env.MYSQL_PORT ? Number(process.env.MYSQL_PORT) : 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-    connectTimeout: 700
+  connectTimeout: 10000 // aumentei para 10 segundos
 });
 
-async function testConnection() {
-  try {
-    const connection = await pool.getConnection();
-    console.log('✅ Conexão com MySQL estabelecida com sucesso');
-    connection.release();
-  } catch (error) {
-    console.error('❌ Erro ao conectar ao MySQL:', error.message);
-    throw error;
-  }
-}
-
+// Testa conexão e cria tabelas, se necessário
 async function initDB() {
   try {
+    const connection = await pool.getConnection();
+    console.log('✅ Conexão com o MySQL estabelecida!');
+    connection.release();
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id VARCHAR(255) PRIMARY KEY,
@@ -51,21 +45,14 @@ async function initDB() {
       )
     `);
 
-    console.log('✅ Tabelas verificadas/criadas com sucesso');
+    console.log('✅ Tabelas criadas/verificadas com sucesso');
   } catch (error) {
-    console.error('❌ Erro ao inicializar banco de dados:', error);
+    console.error('❌ Erro ao conectar ao MySQL:', error.message);
     throw error;
   }
 }
 
-(async () => {
-  try {
-    await testConnection();
-    await initDB();
-  } catch (error) {
-    console.error('Erro durante a inicialização:', error);
-    process.exit(1);
-  }
-})();
+// Executa ao carregar
+initDB();
 
 export { pool };

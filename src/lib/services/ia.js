@@ -11,8 +11,7 @@ export async function customizeIA(userId, config) {
     if (!personalities.includes(config.personality)) {
       throw new Error ('Personalidade inválida');
     }
-
-    const updatedAt = new Date().toISOString();
+const updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     // Atualiza no Firebase
     await db.collection ('ia_configs').doc(userId).set({
@@ -22,11 +21,11 @@ export async function customizeIA(userId, config) {
 
     // Atualiza também no MySQL
     const sql = `
-      INSERT INTO ia_configs (id, user_id, personality, theme, updated_at)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO ia_configs (id, user_id, personality, updated_at)
+      VALUES (?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE
         personality = VALUES(personality),
-        theme = VALUES(theme),
+      
         updated_at = VALUES(updated_at)
     `;
 
@@ -34,7 +33,7 @@ export async function customizeIA(userId, config) {
       userId,
       userId,
       config.personality,
-      config.theme || null,
+  
       updatedAt
     ]);
 

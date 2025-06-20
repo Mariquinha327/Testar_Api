@@ -13,7 +13,16 @@ export default async function handler(req, res) {
     }
 
     await customizeIA(userId, config);
-    return res.status(200).json({ success: true });
+
+    // Retorna os dados inseridos
+    return res.status(200).json({
+      success: true,
+      data: {
+        userId,
+        ...config,
+        updated_at: new Date().toISOString()
+      }
+    });
   } catch (error) {
     console.error('Customization error:', error);
     return res.status(500).json({ error: error.message });
